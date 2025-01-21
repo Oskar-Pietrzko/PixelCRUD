@@ -1,22 +1,25 @@
-import os
 from PIL import Image
-import pytesseract
-
-from flask import Flask, request, jsonify, make_response
+from PIL.ImageFile import ImageFile
+from flask import Flask, request, jsonify, make_response, Response
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from app.models.user import User
 from app.models.note import Note
 from app import db
 
+import pytesseract
+import os
+
+
 class UserController:
     @staticmethod
-    def register(app: Flask):
+    def register(app: Flask) -> None:
         @app.route("/api/user", methods=["POST"])
-        def add_user():
-            name = request.json.get("name")
-            surname = request.json.get("surname")
-            email = request.json.get("email")
+        def add_user() -> Response:
+            name: str = request.json.get("name", "")
+            surname: str = request.json.get("surname", "")
+            email: str = request.json.get("email", "")
 
             if not name or not surname or not email:
                 return make_response(jsonify({ "success": False, "error": "Missing required fields" }), 400)
@@ -24,48 +27,57 @@ class UserController:
             if User.query.filter_by(email=email).first():
                 return make_response(jsonify({ "success": False, "error": "Email already in use" }), 409)
 
-            user = User(name=name, surname=surname, email=email)
+            user: User = User(name=name, surname=surname, email=email)
 
             db.session.add(user)
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": user.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 201)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": user.to_json()
+                    }
+                ),
+                201
+            )
 
         @app.route("/api/user", methods=["GET"])
-        def get_users():
-            users = User.query.all()
+        def get_users() -> Response:
+            users: list[User] = User.query.all()
 
-            response_data = {
-                "success": True,
-                "data": [user.to_json() for user in users],
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": [user.to_json() for user in users]
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>", methods=["GET"])
-        def get_user(user_id: int):
-            user = User.query.get(user_id)
+        def get_user(user_id: int) -> Response:
+            user: User|None = User.query.get(user_id)
 
-            if user is None:
+            if not user:
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
-            response_data = {
-                "success": True,
-                "data": user.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": user.to_json()
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>", methods=["PUT"])
-        def update_user(user_id: int):
-            user = User.query.get(user_id)
+        def update_user(user_id: int) -> Response:
+            user: User|None = User.query.get(user_id)
 
-            if user is None:
+            if not user:
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
             if User.query.filter(User.email == request.json.get("email"), User.id != user.id).first():
@@ -77,130 +89,148 @@ class UserController:
 
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": user.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": user.to_json()
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>", methods=["DELETE"])
-        def delete_user(user_id: int):
-            user = User.query.get(user_id)
+        def delete_user(user_id: int) -> Response:
+            user: User|None = User.query.get(user_id)
 
-            if user is None:
+            if not user:
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
             db.session.delete(user)
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": {},
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": {}
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>/note", methods=["POST"])
-        def create_note(user_id: int):
+        def create_note(user_id: int) -> Response:
             if not User.query.get(user_id):
                 return make_response(jsonify({"success": False, "error": "User does not exist"}), 404)
 
-            title = request.json.get("title")
-            content = request.json.get("content")
+            title: str = request.json.get("title", "")
+            content: str = request.json.get("content", "")
 
             if not title or not content:
                 return make_response(jsonify({"success": False, "error": "Missing required fields"}), 400)
 
-            note = Note(user_id=user_id, title=title, content=content)
+            note: Note = Note(user_id=user_id, title=title, content=content)
 
             db.session.add(note)
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": note.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 201)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": note.to_json()
+                    }
+                ),
+                201
+            )
 
         @app.route("/api/user/<int:user_id>/note/upload", methods=["POST"])
-        def upload_note(user_id: int):
+        def upload_note(user_id: int) -> Response:
             if not User.query.get(user_id):
                 return make_response(jsonify({"success": False, "error": "User does not exist"}), 404)
 
-            if "note" not in request.files:
+            note_image: FileStorage|None = request.files.get("note")
+
+            if not note_image:
                 return make_response(jsonify({"success": False, "error": "Missing required image file"}), 400)
 
-            image = request.files.get("note")
+            filename: str = secure_filename(note_image.filename)
+            path: str = os.path.join(app.root_path + "/..", app.config["CACHE_FOLDER"], filename)
 
-            filename = secure_filename(image.filename)
-            path = os.path.join(app.root_path + "/..", app.config["CACHE_FOLDER"], filename)
+            note_image.save(path)
 
-            image.save(path)
-
-            image_open = Image.open(path)
-            content = pytesseract.image_to_string(image_open, lang="pol")
+            image: ImageFile = Image.open(path)
+            content: str = pytesseract.image_to_string(image, lang="pol")
 
             os.remove(path)
 
-            note = Note(user_id=user_id, title=filename, content=content)
+            note: Note = Note(user_id=user_id, title=filename, content=content)
 
             db.session.add(note)
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": note.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 201)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": note.to_json()
+                    }
+                ),
+                201
+            )
 
         @app.route("/api/user/<int:user_id>/note", methods=["GET"])
-        def get_notes(user_id: int):
+        def get_notes(user_id: int) -> Response:
             if not User.query.get(user_id):
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
-            notes = Note.query.filter(Note.user_id == user_id).all()
+            notes: list[Note] = Note.query.filter(Note.user_id == user_id).all()
 
-            response_data = {
-                "success": True,
-                "data": [note.to_json() for note in notes],
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": [note.to_json() for note in notes]
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>/note/<int:note_id>", methods=["GET"])
-        def get_note(user_id: int, note_id: int):
+        def get_note(user_id: int, note_id: int) -> Response:
             if not User.query.get(user_id):
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
             if not Note.query.get(note_id):
                 return make_response(jsonify({ "success": False, "error": "Note does not exist" }), 404)
 
-            note = Note.query.filter(Note.user_id == user_id, Note.id == note_id).first()
+            note: Note|None = Note.query.filter(Note.user_id == user_id, Note.id == note_id).first()
 
-            if note is None:
+            if not note:
                 return make_response(jsonify({ "success": False, "error": "Note is not accessible in the user scope" }), 401)
 
-            response_data = {
-                "success": True,
-                "data": note.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": note.to_json()
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>/note/<int:note_id>", methods=["PUT"])
-        def update_note(user_id: int, note_id: int):
+        def update_note(user_id: int, note_id: int) -> Response:
             if not User.query.get(user_id):
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
             if not Note.query.get(note_id):
                 return make_response(jsonify({"success": False, "error": "Note does not exist"}), 404)
 
-            note = Note.query.filter(Note.user_id == user_id, Note.id == note_id).first()
+            note: Note|None = Note.query.filter(Note.user_id == user_id, Note.id == note_id).first()
 
-            if note is None:
+            if not note:
                 return make_response(jsonify({"success": False, "error": "Note is not accessible in the user scope"}), 401)
 
             note.title = request.json.get("title", note.title)
@@ -208,32 +238,38 @@ class UserController:
 
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": note.to_json(),
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": note.to_json()
+                    }
+                ),
+                200
+            )
 
         @app.route("/api/user/<int:user_id>/note/<int:note_id>", methods=["DELETE"])
-        def delete_note(user_id: int, note_id: int):
+        def delete_note(user_id: int, note_id: int) -> Response:
             if not User.query.get(user_id):
                 return make_response(jsonify({ "success": False, "error": "User does not exist" }), 404)
 
             if not Note.query.get(note_id):
                 return make_response(jsonify({"success": False, "error": "Note does not exist"}), 404)
 
-            note = Note.query.filter(Note.user_id == user_id, Note.id == note_id).first()
+            note: Note|None = Note.query.filter(Note.user_id == user_id, Note.id == note_id).first()
 
-            if note is None:
+            if not note:
                 return make_response(jsonify({"success": False, "error": "Note is not accessible in the user scope"}), 401)
 
             db.session.delete(note)
             db.session.commit()
 
-            response_data = {
-                "success": True,
-                "data": {},
-            }
-
-            return make_response(jsonify(response_data), 200)
+            return make_response(
+                jsonify(
+                    {
+                        "success": True,
+                        "data": {}
+                    }
+                ),
+                200
+            )

@@ -1,4 +1,4 @@
 class Config:
-    SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    CACHE_FOLDER = "cache/"
+    SQLALCHEMY_DATABASE_URI: str = "sqlite:///database.db"
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    CACHE_FOLDER: str = "cache/"
