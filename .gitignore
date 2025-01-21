@@ -1,0 +1,13 @@
+__pycache__/
+
+# Flask cache and session data
+instance/
+
+# Virtual environment
+.venv/
+
+# IDEs and editors
+.idea/
+
+# Config and secrets
+.env
