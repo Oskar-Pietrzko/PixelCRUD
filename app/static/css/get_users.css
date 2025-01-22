@@ -1,0 +1,94 @@
+@import url("reset.css");
+@import url("style.css");
+@import url("table.css");
+
+h1 {
+    text-align: center;
+}
+
+h1 {
+    margin: 20px 0;
+    text-align: center;
+}
+
+a{
+    color: #333;
+}
+
+.container {
+    display: flex;
+}
+
+.wrapper {
+    width:70%;
+    margin-right: 20px;
+}
+
+.form {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 80px 20px 20px;
+    background-color: #f9f9f9;
+    width: 30%;
+    padding: 30px 30px;
+}
+
+.form__input {
+    padding: 10px 0;
+    position: relative;
+}
+
+.form__input input {
+    padding: 10px;
+    width: 300px;
+    border-radius: 8px;
+    border: 2px solid #aaa;
+    background: none;
+    color: #333;
+
+}
+.form__input label {
+    position: absolute;
+    padding: 0 5px;
+    top: 30%;
+    left: 2%;
+    transition: transform .3s;
+    color: #3a3a3a;
+}
+
+.form__input input:focus {
+    outline: none;
+    border: solid 2px #057dcd;
+}
+
+.form__input input:focus ~ label {
+    transform: translateY(-90%);
+    color: #057dcd;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.form__input input:valid ~ label {
+    transform: translateY(-90%);
+    transition: transform 0s;
+    background-color: #fff;
+}
+
+.form__submit, .btn-primary {
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 14px;
+    margin-right: 10px;
+    border:0;
+    cursor:pointer;
+    background-color: #057dcd;
+    transition: background-color .3s;
+}
+
+.form__submit:hover {
+    background-color: #005ac1;
+}
+
+

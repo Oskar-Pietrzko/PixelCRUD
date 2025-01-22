@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User {{ user_id }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/get_user.css') }}">
+        <script>
+            async function addNewNote() {
+                const title = document.getElementById("newNoteTitle");
+                const content = document.getElementById("newNoteContent");
+
+                await fetch("/api/user/{{ user_id }}/note", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: title.value,
+                        content: content.value,
+                    })
+                })
+
+                window.location.reload()
+            }
+
+            function editNote(note_id) {
+                const note = document.getElementById("note-" + note_id);
+                const title = note.querySelector("#title");
+                const titleText = title.innerHTML;
+
+                const titleEditable = document.createElement("textarea");
+                titleEditable.id = "title";
+                titleEditable.classList.add("note__title");
+                titleEditable.value = titleText;
+
+                title.remove();
+                note.prepend(titleEditable)
+
+                const content = note.querySelector("#content");
+                content.readOnly = false;
+
+                const deleteButton = note.querySelector("#deleteButton");
+                deleteButton.hidden = true;
+
+                const editButton = note.querySelector("#editButton");
+                editButton.hidden = true;
+
+                const cancelButton = note.querySelector("#cancelButton");
+                cancelButton.hidden = false;
+
+                const saveButton = note.querySelector("#saveButton");
+                saveButton.hidden = false;
+            }
+
+            function cancelNote(note_id) {
+                const note = document.getElementById("note-" + note_id);
+                const titleEditable = note.querySelector("#title");
+                const titleText = titleEditable.value;
+
+                const title = document.createElement("h2");
+                title.id = "title";
+                title.classList.add("note__title");
+                title.innerHTML = titleText;
+
+                titleEditable.remove();
+                note.prepend(title)
+
+                const content = note.querySelector("#content");
+                content.readOnly = true;
+
+                const deleteButton = note.querySelector("#deleteButton");
+                deleteButton.hidden = false;
+
+                const editButton = note.querySelector("#editButton");
+                editButton.hidden = false;
+
+                const cancelButton = note.querySelector("#cancelButton");
+                cancelButton.hidden = true;
+
+                const saveButton = note.querySelector("#saveButton");
+                saveButton.hidden = true;
+            }
+
+            async function saveNote(note_id) {
+                const note = document.getElementById("note-" + note_id);
+                const title = note.querySelector("#title");
+                const content = note.querySelector("#content");
+
+                await fetch("/api/user/{{ user_id }}/note/" + note_id, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: title.value,
+                        content: content.value,
+                    })
+                })
+
+                window.location.reload()
+            }
+
+            async function deleteNote(note_id) {
+                await fetch("/api/user/{{ user_id }}/note/" + note_id, {
+                    method: "DELETE",
+                })
+
+                window.location.reload()
+            }
+
+            async function uploadNote() {
+                const input = document.getElementById("image");
+                const file = input.files[0];
+
+                const formData = new FormData();
+                formData.append("note", file);
+
+                await fetch("/api/user/{{ user_id }}/note/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                window.location.reload()
+            }
+
+            async function deleteUser() {
+                await fetch("/api/user/{{ user_id }}", {
+                    method: "DELETE",
+                })
+
+                window.location.replace("/user")
+            }
+
+            async function editUser() {
+                const user = (await (await fetch("/api/user/{{ user_id }}")).json()).data
+
+                document.getElementById("name").innerHTML = `<strong>Name: </strong><input type="text" id="newName" value="${user.name}" />`
+                document.getElementById("surname").innerHTML = `<strong>Surname: </strong><input type="text" id="newSurname" value="${user.surname}" />`
+                document.getElementById("email").innerHTML = `<strong>Email: </strong><input type="email" id="newEmail" value="${user.email}" />`
+
+                document.getElementById("deleteUserButton").hidden = true;
+                document.getElementById("editUserButton").hidden = true;
+                document.getElementById("cancelUserButton").hidden = false;
+                document.getElementById("saveUserButton").hidden = false;
+            }
+
+            function cancelUser() {
+                fetchUser()
+
+                document.getElementById("deleteUserButton").hidden = false;
+                document.getElementById("editUserButton").hidden = false;
+                document.getElementById("cancelUserButton").hidden = true;
+                document.getElementById("saveUserButton").hidden = true;
+            }
+
+            async function saveUser() {
+                const name = document.getElementById("newName").value;
+                const surname = document.getElementById("newSurname").value;
+                const email = document.getElementById("newEmail").value;
+
+                await fetch("/api/user/{{ user_id }}", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        surname: surname,
+                        email: email,
+                    }),
+                });
+
+                window.location.reload()
+            }
+
+            async function fetchUser() {
+                const response = await fetch("/api/user/{{ user_id }}");
+                const user = await response.json();
+
+                document.getElementById("id").innerHTML = `<strong>ID: </strong> ${user.data.id}`;
+                document.getElementById("name").innerHTML = `<strong>Name: </strong> ${user.data.name}`;
+                document.getElementById("surname").innerHTML = `<strong>Surname: </strong> ${user.data.surname}`;
+                document.getElementById("email").innerHTML = `<strong>Email: </strong> ${user.data.email}`;
+            }
+
+            async function fetchNotes() {
+                const response = await fetch("/api/user/{{ user_id }}/note");
+                const notes = await response.json();
+
+                const main = document.getElementById("notes");
+
+                notes.data.forEach((note) => {
+                    const section = document.createElement("section");
+                    section.classList.add("note");
+                    section.id = "note-" + note.id;
+
+                    const title = document.createElement("h2");
+                    title.id = "title";
+                    title.classList.add("note__title");
+                    title.innerHTML = note.title;
+
+                    const content = document.createElement("textarea");
+                    content.id = "content";
+                    content.classList.add("note__content");
+                    content.readOnly = true;
+                    content.innerHTML = note.content;
+
+                    const buttonContainer = document.createElement("div");
+                    buttonContainer.classList.add("note__actions");
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.id = "deleteButton";
+                    deleteButton.classList.add("btn");
+                    deleteButton.classList.add("btn-danger");
+                    deleteButton.innerHTML = "DELETE";
+                    deleteButton.addEventListener("click", () => deleteNote(note.id));
+
+                    const editButton = document.createElement("button");
+                    editButton.id = "editButton";
+                    editButton.classList.add("btn");
+                    editButton.classList.add("btn-primary");
+                    editButton.innerHTML = "EDIT";
+                    editButton.addEventListener("click", () => editNote(note.id));
+
+                    const cancelButton =document.createElement("button");
+                    cancelButton.id = "cancelButton";
+                    cancelButton.classList.add("btn");
+                    cancelButton.classList.add("btn-danger");
+                    cancelButton.innerHTML = "CANCEL";
+                    cancelButton.hidden = true;
+                    cancelButton.addEventListener("click", () => cancelNote(note.id));
+
+                    const saveButton = document.createElement("button");
+                    saveButton.id = "saveButton";
+                    saveButton.classList.add("btn");
+                    saveButton.classList.add("btn-success");
+                    saveButton.innerHTML = "SAVE";
+                    saveButton.hidden = true;
+                    saveButton.addEventListener("click", () => saveNote(note.id));
+
+
+                    buttonContainer.appendChild(deleteButton);
+                    buttonContainer.appendChild(editButton);
+                    buttonContainer.appendChild(cancelButton);
+                    buttonContainer.appendChild(saveButton);
+
+                    section.appendChild(title);
+                    section.appendChild(content);
+                    section.appendChild(buttonContainer);
+
+                    main.appendChild(section);
+                });
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                fetchUser();
+                fetchNotes();
+
+                document.getElementById("newNote").addEventListener("click", addNewNote);
+                document.getElementById("uploadNote").addEventListener("click", uploadNote);
+                document.getElementById("deleteUserButton").addEventListener("click", deleteUser);
+                document.getElementById("editUserButton").addEventListener("click", editUser);
+                document.getElementById("cancelUserButton").addEventListener("click", cancelUser);
+                document.getElementById("saveUserButton").addEventListener("click", saveUser);
+                document.getElementById("image").addEventListener("change", () => {
+                    document.getElementById("uploadNote").disabled = false;
+                });
+                document.getElementById("newNoteTitle").addEventListener("input", () => {
+                    document.getElementById("newNote").disabled = document.getElementById("newNoteTitle").value.length === 0;
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <aside>
+                <div class="user-info">
+                    <h2>User Info</h2>
+                    <p id="id"></p>
+                    <p id="name"></p>
+                    <p id="surname"></p>
+                    <p id="email"></p>
+                    <div class="user__actions">
+                        <button class="btn btn-danger" id="deleteUserButton">DELETE</button>
+                        <button class="btn btn-primary" id="editUserButton">EDIT</button>
+                        <button class="btn btn-danger" id="cancelUserButton" hidden="hidden">CANCEL</button>
+                        <button class="btn btn-success" id="saveUserButton" hidden="hidden">SAVE</button>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <h2>Add note</h2>
+                    <label for="newNoteTitle">Title</label>
+                    <input type="text" id="newNoteTitle">
+                    <label for="newNoteContent">Content</label>
+                    <textarea id="newNoteContent"></textarea>
+                    <button class="btn btn-primary" id="newNote" disabled="disabled">Create</button>
+                </div>
+                <div class="user-info">
+                    <h2>Upload note</h2>
+                    <input type="file" id="image">
+                    <button class="btn btn-primary" id="uploadNote" disabled="disabled">Upload</button>
+                </div>
+            </aside>
+            <main id="notes"></main>
+        </div>
+    </body>
+</html>

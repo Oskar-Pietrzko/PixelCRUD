@@ -11,9 +11,9 @@ def create_app() -> Flask:
     db.init_app(app)
 
     with app.app_context():
-        from app.controllers.user_controller import UserController
+        from app.controllers import register_routes
 
-        UserController.register(app)
+        register_routes(app)
 
         db.create_all()
 

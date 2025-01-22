@@ -1,0 +1,45 @@
+table {
+    width: 100%;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+
+tr:nth-child(odd) {
+    background-color: #eee;
+}
+
+th, td {
+    padding: 1em 2em;
+    font-size: .8rem;
+    text-align: center;
+    word-break: keep-all;
+    overflow-x: auto;
+}
+
+th {
+    color: #eee;
+    background-color: #057dcd;
+    border-right: 1px solid #e9ecef;
+}
+
+td {
+    max-width: 30vw;
+    overflow-x: auto;
+    border: 1px solid #aaa;
+}
+
+tr:last-child td {
+    text-align: center;
+    background-color: #057dcd;
+}
+
+tr:last-child td a {
+    color: #fff;
+    text-decoration: none;
+}
+
+@media screen and (width <= 370px) {
+    table {
+        border-radius: 0;
+    }
+}
