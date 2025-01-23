@@ -47,7 +47,6 @@ This repository contains a CRUD (Create, Read, Update, Delete) application enhan
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Tested On
-- ![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)
 - ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 - ![Brave](https://img.shields.io/badge/Brave-FB542B?style=for-the-badge&logo=Brave&logoColor=white)
 - ![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
@@ -60,7 +59,7 @@ This repository contains a CRUD (Create, Read, Update, Delete) application enhan
 
 ### Client Routes
 
-#### **POST /api/client**: Create New Client  
+#### POST /api/client: Create New Client  
 **Request Body:**  
 - `name` (string, required): The name of the client.  
 - `surname` (string, required): The surname of the client.  
@@ -72,7 +71,7 @@ This repository contains a CRUD (Create, Read, Update, Delete) application enhan
 
 ---
 
-#### **GET /api/client**: Get List of clients  
+#### GET /api/client: Get List of clients  
 Returns a list of all clients.  
 
 **Response Body:**  
@@ -85,7 +84,7 @@ Returns a list of all clients.
 
 ---
 
-#### **GET /api/client/\<client_id>**: Get client  
+#### GET /api/client/\<client_id>: Get client  
 Retrieves client information by ID.  
 
 **Response Body:**  
@@ -94,7 +93,7 @@ Retrieves client information by ID.
 
 ---
 
-#### **PUT /api/client/\<client_id>**: Update client  
+#### PUT /api/client/\<client_id>: Update client  
 Updates client information by ID.  
 
 **Request Body:**  
@@ -108,16 +107,18 @@ Updates client information by ID.
 
 ---
 
-#### **DELETE /api/client/\<client_id>**: Delete client  
+#### DELETE /api/client/\<client_id>: Delete client  
 Deletes a client by ID.  
 
 **Response Body:**  
 - `success` (boolean)  
   - `data` (object): Empty object.
 
-### **Note Routes**
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-#### **POST /api/client/\<client_id>/note**: Create Note  
+### Note Routes
+
+#### POST /api/client/\<client_id>/note: Create Note  
 Creates a new note for a specific client.  
 
 **Request Body:**  
@@ -132,7 +133,7 @@ Creates a new note for a specific client.
 
 ---
 
-#### **POST /api/client/\<client_id>/note/upload**: Create Note from File  
+#### POST /api/client/\<client_id>/note/upload: Create Note from File  
 Creates a text note for a client from an uploaded file.  
 
 **Request Body:**  
@@ -146,19 +147,19 @@ Creates a text note for a client from an uploaded file.
 
 ---
 
-#### **GET /api/client/\<client_id>/note**: Get All Notes  
+#### GET /api/client/\<client_id>/note: Get All Notes  
 Retrieves all notes for a specific client.  
 
 ---
 
-#### **GET /api/client/\<client_id>/note/\<note_id>**: Get Note  
+#### GET /api/client/\<client_id>/note/\<note_id>: Get Note  
 Retrieves a specific note by its ID.  
 
 **Note:** The `<note_id>` is global across all clients. For example, if Client 1 creates a note with `note_id = 1`, client 2's first note will have `note_id = 2`.
 
 ---
 
-#### **PUT /api/client/\<client_id>/note/\<note_id>**: Update Note  
+#### PUT /api/client/\<client_id>/note/\<note_id>: Update Note  
 Updates a specific note for a client.  
 
 **Request Body:**  
@@ -173,7 +174,7 @@ Updates a specific note for a client.
 
 ---
 
-#### **DELETE /api/client/\<client_id>/note/\<note_id>**: Delete Note  
+#### DELETE /api/client/\<client_id>/note/\<note_id>: Delete Note  
 Deletes a specific note by its ID for a client.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
