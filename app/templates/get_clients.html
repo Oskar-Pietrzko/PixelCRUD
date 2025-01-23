@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Clients Table</title>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.svg') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/get_clients.css') }}" />
+        <script src="{{ url_for('static', filename='js/get_clients.js') }}"></script>
+    </head>
+    <body>
+        <main>
+            <div class="container">
+                <div class="form-wrapper">
+                    <div class="form">
+                        <h1>Add new client</h1>
+                        <div class="form__input">
+                            <input type="text" name="name" id="name" required="required" />
+                            <label for="name">First name</label>
+                        </div>
+                        <div class="form__input">
+                            <input type="text" name="surname" id="surname" required="required" />
+                            <label for="surname">Last name</label>
+                        </div>
+                        <div class="form__input">
+                            <input type="email" name="email" id="email" required="required" />
+                            <label for="email">Email</label>
+                        </div>
+                        <button class="form__submit" id="buttonAddClient" disabled="disabled">Add client</button>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <h1>Clients List</h1>
+                    <table id="clients">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

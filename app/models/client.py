@@ -3,15 +3,15 @@ from sqlalchemy.orm import Mapped
 from app.models.note import Note
 from app import db
 
-class User(db.Model):
-    __tablename__: str = "users"
+class Client(db.Model):
+    __tablename__: str = "clients"
 
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     name: Mapped[str] = db.Column(db.String(100), nullable=False)
     surname: Mapped[str] = db.Column(db.String(100), nullable=False)
     email: Mapped[str] = db.Column(db.String(120), unique=True, nullable=False)
 
-    notes: Mapped[list[Note]] = db.relationship("Note", backref="users", cascade="all, delete-orphan")
+    notes: Mapped[list[Note]] = db.relationship("Note", backref="clients", cascade="all, delete-orphan")
 
     def to_json(self) -> dict[str, str|int]:
         return {

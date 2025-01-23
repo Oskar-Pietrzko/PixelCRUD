@@ -1,4 +1,7 @@
 <div id="readme-top" align="center">
+    <a href="https://github.com/Oskar-Pietrzko/PixelCRUD">
+        <img src=".github/images/logo.svg" alt="Logo" width="80" height="80" />
+    </a>
     <h3 align="center">PixelCRUD</h3>
 </div>
 
@@ -9,6 +12,14 @@
             <a href="#about-the-project">About The Project</a>
             <ul>
                 <li><a href="#built-with">Built With</a></li>
+                <li><a href="#tested-on">Tested On</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#routes">Routes</a>
+            <ul>
+                <li><a href="#client-routes">Client</a></li>
+                <li><a href="#note-routes">Note</a></li>
             </ul>
         </li>
     </ol>
@@ -17,100 +28,152 @@
 ## About The Project
 This repository contains a CRUD (Create, Read, Update, Delete) application enhanced with OCR (Optical Character Recognition) functionality. The project was developed as part of a vocational internship at Pixel.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Developers
-
-* Oskar Pietrzko
-* Klaudiusz Pielaszkiewicz
-* Szymon Podlasiak
-* Stanisław Pellowski-Zawistowski
-* Kacper Sawicki
-* Paweł Król
+- Oskar Pietrzko  
+- Klaudiusz Pielaszkiewicz  
+- Szymon Podlasiak  
+- Stanisław Pellowski-Zawistowski  
+- Kacper Sawicki  
+- Paweł Król  
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
-
-* ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-* ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
-* ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
-* ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+- ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+- ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+- ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+- ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Tested On
-
-* ![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)
-* ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
-* ![Brave](https://img.shields.io/badge/Brave-FB542B?style=for-the-badge&logo=Brave&logoColor=white)
-* ![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
+- ![Windows 11](https://img.shields.io/badge/Windows%2011-%230079d5.svg?style=for-the-badge&logo=Windows%2011&logoColor=white)
+- ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+- ![Brave](https://img.shields.io/badge/Brave-FB542B?style=for-the-badge&logo=Brave&logoColor=white)
+- ![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+---
+
 ## Routes
 
-### POST /api/user : Create New User
-Request Body:
-* name (string, required): The name of the user.
-* surname (string, required): The surname of the user.
-* email (string, required): The email of the user.
+### Client Routes
 
-Response Body:
-* success ()
-* data ()
-  * User data
+#### **POST /api/client**: Create New Client  
+**Request Body:**  
+- `name` (string, required): The name of the client.  
+- `surname` (string, required): The surname of the client.  
+- `email` (string, required): The email of the client.  
 
-### GET /api/user : Get List of Users
-The GET request to /api/user endpoint retrieves user information. The response is a JSON object with a success key indicating the status of the request, and a data array containing user details. Each user object in the data array includes id, name, surname, and email keys, all of which are strings.
+**Response Body:**  
+- `success` (boolean)  
+- `data` (object): Contains the created client data.
 
-### GET /api/user/\<userid> : Get User
-The API endpoint retrieves user information based on the provided user ID. The response is in JSON format.\
-Response Body:
-* success ()
-* data ()
-    * User data
+---
 
-### PUT /api/user/\<userid> : Update User
-The PUT request to /api/user/\<userid> endpoint allows you to change information about the user of the provided user ID. The response it gives is the new, changed user information in JSON format.
+#### **GET /api/client**: Get List of clients  
+Returns a list of all clients.  
 
-Request Body:
-* name (string, optional): The name of the user.
-* surname (string, optional): The surname of the user.
-* email (string, optional): The new email of the user.
+**Response Body:**  
+- `success` (boolean)  
+- `data` (array): Each client object contains:  
+  - `id` (string)  
+  - `name` (string)  
+  - `surname` (string)  
+  - `email` (string)  
 
-Response Body:
-* success ()
-* data ()
-    * User data
+---
 
-### DELETE /api/user/\<userid> : Delete User
-The DELETE request to /api/user/\<userid> endpoint deletes the user of the provided user ID. The response is a JSON object with a success key indicating the status of the request, and an empty data object.
+#### **GET /api/client/\<client_id>**: Get client  
+Retrieves client information by ID.  
 
+**Response Body:**  
+- `success` (boolean)  
+- `data` (object): Contains client data.
 
+---
 
+#### **PUT /api/client/\<client_id>**: Update client  
+Updates client information by ID.  
 
-### POST /api/user/\<userid>/note : Create note
-The POST request to /api/user/\<userid>/note endpoint creates a note with specified title and contents.
+**Request Body:**  
+- `name` (string, optional): New name of the client.  
+- `surname` (string, optional): New surname of the client.  
+- `email` (string, optional): New email of the client.  
 
-Request body:
-* title(string, required)
-* content(string, required)
+**Response Body:**  
+- `success` (boolean)  
+- `data` (object): Updated client data.
 
-Response body:
-* success ()
-* data ()
-  * title()
-  * content()
+---
 
-### POST /api/user/\<userid>/note/upload : Create a note from a file
-The POST request to /api/user/\<userid>/note/upload endpoint creates a text note from a file that has been sent.
+#### **DELETE /api/client/\<client_id>**: Delete client  
+Deletes a client by ID.  
 
-Request body:
-* note(file, required)
+**Response Body:**  
+- `success` (boolean)  
+  - `data` (object): Empty object.
 
-Response body:
-* success ()
-* data ()
-    * title()
-    * content()
+### **Note Routes**
+
+#### **POST /api/client/\<client_id>/note**: Create Note  
+Creates a new note for a specific client.  
+
+**Request Body:**  
+- `title` (string, required): The title of the note.  
+- `content` (string, optional): The content of the note.  
+
+**Response Body:**  
+- `success` (boolean)  
+- `data` (object):  
+  - `title` (string)  
+  - `content` (string)  
+
+---
+
+#### **POST /api/client/\<client_id>/note/upload**: Create Note from File  
+Creates a text note for a client from an uploaded file.  
+
+**Request Body:**  
+- `note` (file, required): The file containing the note.  
+
+**Response Body:**  
+- `success` (boolean)  
+- `data` (object):  
+  - `title` (string)  
+  - `content` (string)  
+
+---
+
+#### **GET /api/client/\<client_id>/note**: Get All Notes  
+Retrieves all notes for a specific client.  
+
+---
+
+#### **GET /api/client/\<client_id>/note/\<note_id>**: Get Note  
+Retrieves a specific note by its ID.  
+
+**Note:** The `<note_id>` is global across all clients. For example, if Client 1 creates a note with `note_id = 1`, client 2's first note will have `note_id = 2`.
+
+---
+
+#### **PUT /api/client/\<client_id>/note/\<note_id>**: Update Note  
+Updates a specific note for a client.  
+
+**Request Body:**  
+- `title` (string, optional): Updated title of the note.  
+- `content` (string, optional): Updated content of the note.  
+
+**Response Body:**  
+- `success` (boolean)  
+- `data` (object):  
+  - `title` (string)  
+  - `content` (string)  
+
+---
+
+#### **DELETE /api/client/\<client_id>/note/\<note_id>**: Delete Note  
+Deletes a specific note by its ID for a client.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Client {{ client_id }}</title>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.svg') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/get_client.css') }}" />
+        <script>
+            const clientId = "{{ client_id }}";
+        </script>
+        <script src="{{ url_for('static', filename='js/get_client.js') }}"></script>
+    </head>
+    <body>
+        <div class="container">
+            <aside>
+                <div class="client-info">
+                    <h2>Client Info</h2>
+                    <p id="id"></p>
+                    <p id="name"></p>
+                    <p id="surname"></p>
+                    <p id="email"></p>
+                    <div class="client__actions">
+                        <button class="btn btn-danger" id="deleteClientButton">DELETE</button>
+                        <button class="btn btn-primary" id="editClientButton">EDIT</button>
+                        <button class="btn btn-danger" id="cancelClientButton" hidden="hidden">CANCEL</button>
+                        <button class="btn btn-success" id="saveClientButton" hidden="hidden">SAVE</button>
+                    </div>
+                </div>
+                <div class="client-info">
+                    <h2>Add note</h2>
+                    <label for="newNoteTitle">Title</label>
+                    <input type="text" id="newNoteTitle">
+                    <label for="newNoteContent">Content</label>
+                    <textarea id="newNoteContent"></textarea>
+                    <button class="btn btn-primary" id="newNote" disabled="disabled">Create</button>
+                </div>
+                <div class="client-info">
+                    <h2>Upload note</h2>
+                    <input type="file" id="image" accept=".jpg, .png">
+                    <button class="btn btn-primary" id="uploadNote" disabled="disabled">Upload</button>
+                </div>
+                <a href="/client" class="btn-danger btn">BACK TO LIST</a>
+            </aside>
+            <main id="notes"></main>
+        </div>
+    </body>
+</html>

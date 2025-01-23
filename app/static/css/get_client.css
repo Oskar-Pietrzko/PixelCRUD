@@ -28,7 +28,7 @@ aside {
     padding: 20px;
 }
 
-.user-info {
+.client-info {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -36,22 +36,22 @@ aside {
     margin-bottom: 40px;
 }
 
-.user-info:first-child input {
+.client-info:first-child input {
     width:200px;
 }
 
-.user-info h2 {
+.client-info h2 {
     font-size: 22px;
     color: #007BFF;
     margin-bottom: 20px;
 }
 
-.user-info p {
+.client-info p {
     margin: 8px 0;
     line-height: 1.6;
 }
 
-.user-info .btn {
+.client-info .btn {
     margin-top: 15px;
 }
 
@@ -128,8 +128,6 @@ label {
 .btn-success {
     background-color: #28a745;
 }
-
-
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
